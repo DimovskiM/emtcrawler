@@ -2,11 +2,11 @@ package com.mdkg.emtcrawler.model;
 
 import javax.persistence.*;
 
-//@Entity
-//@Table(name="category")
+@Entity
+@Table(name="category")
 public class Category {
-  //  @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int ID;
     public String name;
 

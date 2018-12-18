@@ -2,6 +2,7 @@ package com.mdkg.emtcrawler.parser;
 
 import com.mdkg.emtcrawler.model.Category;
 import com.mdkg.emtcrawler.model.Item;
+import com.mdkg.emtcrawler.repository.jpa.ItemRepository;
 import com.mdkg.emtcrawler.repository.mock.RepositoryMock;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,17 +19,17 @@ import java.util.stream.Collectors;
 @Component
 public class MockParser {
     @Autowired
-    RepositoryMock repository;
+    ItemRepository repository;
 
     Document document;
-
+    static String WEBSITE_TO_BE_CRAWLED = "http//marketonline.mk";
     static String GRICKI_SOLENKI_SMOKI = "page0.html";
     static String MLECHNI_PROIZVODI = "page1.html";
     static String SIRENJE = "page2.html";
-    static String MLEKO_JOGURT_KISELO_MLEKO="page3.html";
+    static String MLEKO_JOGURT_KISELO_MLEKO = "page3.html";
     static String LEB = "page4.html";
     static String PIVO = "page5.html";
-    static String JAJCA ="page6.html";
+    static String JAJCA = "page6.html";
     static String SVEZH_ZELENCHUK = "page7.html";
     List<String> stringList;
 
@@ -47,37 +48,36 @@ public class MockParser {
 
     }
 
-    public void getAllElements(Document document){
+    public void getAllElements(Document document) {
         StringBuilder sb = new StringBuilder();
-     Category cat =    document.getAllElements()
-             .stream()
-             .filter(e-> e.hasClass("active"))
-             .map(element -> {
-            Category category  = new Category(element.getElementsByClass("active").text());
-        return category;
-        }).findFirst().get();
-      List<Item> itemList =  document.getAllElements()
+        Category cat = document.getAllElements()
                 .stream()
-                .filter(e-> e.hasClass("thumbnail")).map(element -> {
+                .filter(e -> e.hasClass("active"))
+                .map(element -> {
+                    Category category = new Category(element.getElementsByClass("active").text());
+                    return category;
+                }).findFirst().get();
+        List<Item> itemList = document.getAllElements()
+                .stream()
+                .filter(e -> e.hasClass("thumbnail")).map(element -> {
                     String priceString = element.getElementsByClass("priceCurrent").text();
-                  Double price = priceString.length()>0 ? Double.parseDouble(priceString.split(" ")[1]) : 0;
-                    Item item = new Item(element.getElementsByClass("image-thumb").attr("title"),price,cat);
+                    Double price = priceString.length() > 0 ? Double.parseDouble(priceString.split(" ")[1]) : 0;
+                    Item item = new Item(element.getElementsByClass("image-thumb").attr("title"), price, cat);
                     return item;
-        }).collect(Collectors.toList());
+                }).collect(Collectors.toList());
 
-     repository.addCategory(cat);
-     repository.addItems(itemList);
-             //   .forEach(e-> System.out.println(e.getElementsByClass("image-thumb").attr("title") +" cena = " + e.getElementsByClass("priceCurrent").text()));
+        saveParsedData(cat,itemList);
+        //   .forEach(e-> System.out.println(e.getElementsByClass("image-thumb").attr("title") +" cena = " + e.getElementsByClass("priceCurrent").text()));
 
 
     }
 
-  public   void buildDatabase(){
+    public void buildDatabase() {
         stringList.stream().forEach(website -> {
             File file = new File(website);
             Document doc;
             try {
-                doc = Jsoup.connect(website).get();
+                doc = Jsoup.parse(file, "UTF-8", WEBSITE_TO_BE_CRAWLED);
                 getAllElements(doc);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -85,5 +85,14 @@ public class MockParser {
 
 
         });
-}
     }
+
+
+    void saveParsedData(Category category, List<Item> itemList) {
+        itemList.stream().map(item -> {
+            Item newItem = item;
+            newItem.category = category;
+            return newItem;
+        }).forEach(item -> repository.save(item));
+    }
+}

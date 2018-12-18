@@ -6,27 +6,28 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
-//@Entity
-//@Table(name="item")
+@Entity
+@Table(name="item")
 public class Item {
-  //  @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int ID;
     public String name;
     public Double price;
-    //@ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public Category category;
-
-    //@Lob
-    //@JsonIgnore
+    public String photoLink;
+    @Lob
+    @JsonIgnore
     public byte[] photoData;
 
-    public HashMap<LocalDate,Integer> priceList;
 
   public Item(String name, Double price, Category category) {
     this.name = name;
     this.price = price;
     this.category = category;
+    this.photoData = null;
+    this.photoLink="";
   }
   @Override
   public String toString(){

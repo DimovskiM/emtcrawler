@@ -2,6 +2,7 @@ package com.mdkg.emtcrawler.parser;
 
 import com.mdkg.emtcrawler.model.Category;
 import com.mdkg.emtcrawler.model.Item;
+import com.mdkg.emtcrawler.repository.jpa.ItemRepository;
 import com.mdkg.emtcrawler.repository.mock.RepositoryMock;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public  class Parser {
-     static String FIRST_SITE = "http://www.marketonline.mk/";
+     static String WEBSITE_TO_BE_PARSED = "http://www.marketonline.mk/";
      static String GRICKI_SOLENKI_SMOKI = "http://www.marketonline.mk/%D0%A7%D0%B8%D0%BF%D1%81%2C-%D1%81%D0%BC%D0%BE%D0%BA%D0%B8%2C-%D1%81%D0%BE%D0%BB%D0%B5%D0%BD%D0%BA%D0%B8%2C-%D0%B3%D1%80%D0%B8%D1%86%D0%BA-41/";
      static String MLECHNI_PROIZVODI = "http://www.marketonline.mk/%D0%9C%D0%BB%D0%B5%D1%87%D0%BD%D0%B8-%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%B2%D0%BE%D0%B4%D0%B8-6/";
      static String SIRENJE = "http://www.marketonline.mk/%D0%A1%D0%B8%D1%80%D0%B5%D1%9A%D0%B5-2/";
@@ -34,7 +35,7 @@ public  class Parser {
 
      List<String> stringList;
      @Autowired
-     RepositoryMock repository;
+     ItemRepository repository;
     int page = 0;
 
     public Parser() {
@@ -50,32 +51,31 @@ public  class Parser {
 
     }
 
-   // @Scheduled(cron = "0 15 10 15 * ?")
+
    public void getAllElements(Document document){
        StringBuilder sb = new StringBuilder();
-       Category cat =    document.getAllElements()
+       Category category =    document.getAllElements()
                .stream()
                .filter(e-> e.hasClass("active"))
                .map(element -> {
-                   Category category  = new Category(element.getElementsByClass("active").text());
-                   return category;
+                   Category cat  = new Category(element.getElementsByClass("active").text());
+                   return cat;
                }).findFirst().get();
        List<Item> itemList =  document.getAllElements()
                .stream()
                .filter(e-> e.hasClass("thumbnail")).map(element -> {
                    String priceString = element.getElementsByClass("priceCurrent").text();
                    Double price = priceString.length()>0 ? Double.parseDouble(priceString.split(" ")[1]) : 0;
-                   Item item = new Item(element.getElementsByClass("image-thumb").attr("title"),price,cat);
+                   Item item = new Item(element.getElementsByClass("image-thumb").attr("title"),price,category);
                    return item;
                }).collect(Collectors.toList());
 
-       repository.addCategory(cat);
-       repository.addItems(itemList);
+       saveParsedData(category,itemList);
        //   .forEach(e-> System.out.println(e.getElementsByClass("image-thumb").attr("title") +" cena = " + e.getElementsByClass("priceCurrent").text()));
 
 
    }
-
+//Scheduled(cron = "0 15 10 15 * ?")
     public   void buildDatabase(){
         stringList.stream().forEach(website -> {
             File file = new File(website);
@@ -89,6 +89,13 @@ public  class Parser {
 
 
         });
+    }
+
+    void saveParsedData(Category category , List<Item> itemList){
+        itemList.stream().map(item -> {
+            item.category=category;
+            return item;
+        }).forEach(item -> repository.save(item));
     }
 
 

@@ -11,6 +11,9 @@ public interface ItemService {
      Item findById(int id);
      Item findByName(String name);
      List<Item> findByCategory(Category category);
+     void buildDatabase();
+     List<Item> findAll();
+     void addItem();
 
 
 
