@@ -13,7 +13,6 @@ public interface ItemService {
      List<Item> findByCategory(Category category);
      void buildDatabase();
      List<Item> findAll();
-     void addItem();
 
 
 

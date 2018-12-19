@@ -2,6 +2,7 @@ package com.mdkg.emtcrawler.parser;
 
 import com.mdkg.emtcrawler.model.Category;
 import com.mdkg.emtcrawler.model.Item;
+import com.mdkg.emtcrawler.repository.jpa.CategoryRepository;
 import com.mdkg.emtcrawler.repository.jpa.ItemRepository;
 import com.mdkg.emtcrawler.repository.mock.RepositoryMock;
 import org.jsoup.Jsoup;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 public class MockParser {
     @Autowired
     ItemRepository repository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     Document document;
     static String WEBSITE_TO_BE_CRAWLED = "http//marketonline.mk";
@@ -89,10 +94,7 @@ public class MockParser {
 
 
     void saveParsedData(Category category, List<Item> itemList) {
-        itemList.stream().map(item -> {
-            Item newItem = item;
-            newItem.category = category;
-            return newItem;
-        }).forEach(item -> repository.save(item));
+        itemList.stream().forEach(item -> {
+            repository.save(item); });
     }
 }

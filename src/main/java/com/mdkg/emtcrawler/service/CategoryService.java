@@ -2,10 +2,12 @@ package com.mdkg.emtcrawler.service;
 
 import com.mdkg.emtcrawler.model.Category;
 
+import java.util.Optional;
+
 public interface CategoryService {
 
     void save(Category category);
-    Category findById(int id);
+    Optional<Category> findById(int id);
     Category findByName(String name);
 
 }

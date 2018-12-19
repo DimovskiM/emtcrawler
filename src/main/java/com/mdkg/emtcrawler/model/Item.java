@@ -12,10 +12,12 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int ID;
+    @Column(length = 5000)
     public String name;
     public Double price;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     public Category category;
+
     public String photoLink;
     @Lob
     @JsonIgnore
