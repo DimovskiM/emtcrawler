@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class MockParser {
     @Autowired
-    ItemRepository repository;
+    ItemRepository itemRepository;
     @Autowired
     CategoryRepository categoryRepository;
 
@@ -62,6 +62,8 @@ public class MockParser {
                     Category category = new Category(element.getElementsByClass("active").text());
                     return category;
                 }).findFirst().get();
+        categoryRepository.save(cat);
+
         List<Item> itemList = document.getAllElements()
                 .stream()
                 .filter(e -> e.hasClass("thumbnail")).map(element -> {
@@ -71,7 +73,7 @@ public class MockParser {
                     return item;
                 }).collect(Collectors.toList());
 
-        saveParsedData(cat,itemList);
+        saveParsedData(itemList);
         //   .forEach(e-> System.out.println(e.getElementsByClass("image-thumb").attr("title") +" cena = " + e.getElementsByClass("priceCurrent").text()));
 
 
@@ -93,8 +95,8 @@ public class MockParser {
     }
 
 
-    void saveParsedData(Category category, List<Item> itemList) {
+    void saveParsedData(List<Item> itemList) {
         itemList.stream().forEach(item -> {
-            repository.save(item); });
+            itemRepository.save(item); });
     }
 }

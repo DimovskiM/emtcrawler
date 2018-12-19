@@ -35,7 +35,7 @@ public class RepositoryMock {
     public void listByCategory(){
         categoryList.stream().forEach(cat -> {
             System.out.println(cat);
-            itemList.stream().filter(item -> item.category.equals(cat)).forEach(e-> System.out.println(e));
+       //     itemList.stream().filter(item -> item.category.equals(cat)).forEach(e-> System.out.println(e));
             System.out.println("----------------------------------------------------------------------------------");
 
         });

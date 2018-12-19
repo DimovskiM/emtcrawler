@@ -92,10 +92,7 @@ public  class Parser {
     }
 
     void saveParsedData(Category category , List<Item> itemList){
-        itemList.stream().map(item -> {
-            item.category=category;
-            return item;
-        }).forEach(item -> repository.save(item));
+        itemList.stream().forEach(item -> repository.save(item));
     }
 
 

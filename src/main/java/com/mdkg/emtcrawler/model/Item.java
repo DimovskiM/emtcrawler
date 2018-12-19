@@ -15,7 +15,7 @@ public class Item {
     @Column(length = 5000)
     public String name;
     public Double price;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     public Category category;
 
     public String photoLink;
@@ -23,7 +23,9 @@ public class Item {
     @JsonIgnore
     public byte[] photoData;
 
+  public Item(){
 
+  }
   public Item(String name, Double price, Category category) {
     this.name = name;
     this.price = price;

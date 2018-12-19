@@ -13,7 +13,9 @@ public class Category {
     public int ID;
     public String name;
 
+    public Category(){
 
+   }
   public Category(String name) {
     this.name = name;
   }
