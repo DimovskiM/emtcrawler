@@ -25,7 +25,6 @@ public class TestController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getItems(){
         ModelAndView modelAndView= new ModelAndView("index.html");
-       itemService.buildDatabase();
 
         List<Item>  itemList = itemService.findAll();
         itemList.stream().forEach(item -> System.out.println(item));
