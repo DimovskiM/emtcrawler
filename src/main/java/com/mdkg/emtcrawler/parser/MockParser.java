@@ -36,6 +36,7 @@ public class MockParser {
     static String PIVO = "page5.html";
     static String JAJCA = "page6.html";
     static String SVEZH_ZELENCHUK = "page7.html";
+    static String SETEC_LINK = "http://setec.mk/index.php?route=product/category&path=10003&limit=100&";
     List<String> stringList;
 
     public MockParser() {
@@ -68,14 +69,15 @@ public class MockParser {
                 .stream()
                 .filter(e -> e.hasClass("thumbnail")).map(element -> {
                     String priceString = element.getElementsByClass("priceCurrent").text();
+                    String itemName = element.getElementsByClass("image-thumb").attr("title");
+                    String itemUrl = element.getElementsByClass("image-thumb").attr("src");
                     Double price = priceString.length() > 0 ? Double.parseDouble(priceString.split(" ")[1]) : 0;
-                    Item item = new Item(element.getElementsByClass("image-thumb").attr("title"), price, cat);
-                    return item;
+
+                        Item item = price>0 ? new Item(itemName, price,itemUrl, cat):null;
+                        return item;
                 }).collect(Collectors.toList());
 
         saveParsedData(itemList);
-        //   .forEach(e-> System.out.println(e.getElementsByClass("image-thumb").attr("title") +" cena = " + e.getElementsByClass("priceCurrent").text()));
-
 
     }
 
@@ -94,9 +96,17 @@ public class MockParser {
         });
     }
 
+    public void saveAllLinks(){
+        //product-item-container;
+        //right-block -> a href -> text
+        //right-block -> price->redovnaCena_Listing;
+
+    }
 
     void saveParsedData(List<Item> itemList) {
         itemList.stream().forEach(item -> {
-            itemRepository.save(item); });
+            if(item!=null)
+            itemRepository.save(item);
+        });
     }
 }

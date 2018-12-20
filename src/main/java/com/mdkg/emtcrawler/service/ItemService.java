@@ -10,7 +10,7 @@ public interface ItemService {
      void save(Item item);
      Item findById(int id);
      Item findByName(String name);
-     List<Item> findByCategory(Category category);
+     List<Item> findByCategory(String category);
      void buildDatabase();
      List<Item> findAll();
 

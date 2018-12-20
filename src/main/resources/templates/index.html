@@ -2,11 +2,18 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Hello!</title>
+    <title>Title</title>
 </head>
 <body>
-<div >
-    <p></p>
-</div>
+<h3>Hello! Welcome!</h3>
+
+<table class="table table-striped">
+    <th:block th:each ="item : ${items}">
+        <tr>
+            <td th:text="${item.name}">...</td>
+
+        </tr>
+    </th:block>
+</table>
 </body>
 </html>

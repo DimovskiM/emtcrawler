@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -17,18 +18,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
-public class TestController {
+@RequestMapping("/item")
+public class ItemController {
     @Autowired
     ItemService itemService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView getItems(){
+    public ModelAndView getAllItems(){
         ModelAndView modelAndView= new ModelAndView("index.html");
 
-        List<Item>  itemList = itemService.findAll();
-        itemList.stream().forEach(item -> System.out.println(item));
+         modelAndView.addObject("items",itemService.findAll()) ;
+         return modelAndView;
+    }
+
+    @RequestMapping("/item/{name}")
+    public ModelAndView getItemByName(@RequestParam("name") String name){
+        Item item = itemService.findByName(name);
+        ModelAndView modelAndView= new ModelAndView("index.html");
+        modelAndView.addObject("item",item);
         return modelAndView;
     }
+
+
 
 }

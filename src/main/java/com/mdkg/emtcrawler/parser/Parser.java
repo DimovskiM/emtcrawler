@@ -63,15 +63,18 @@ public  class Parser {
                }).findFirst().get();
        List<Item> itemList =  document.getAllElements()
                .stream()
-               .filter(e-> e.hasClass("thumbnail")).map(element -> {
+               .filter(e -> e.hasClass("thumbnail")).map(element -> {
                    String priceString = element.getElementsByClass("priceCurrent").text();
-                   Double price = priceString.length()>0 ? Double.parseDouble(priceString.split(" ")[1]) : 0;
-                   Item item = new Item(element.getElementsByClass("image-thumb").attr("title"),price,category);
+                   String itemName = element.getElementsByClass("image-thumb").attr("title");
+                   String itemUrl = element.getElementsByClass("image-thumb").attr("src");
+                   Double price = priceString.length() > 0 ? Double.parseDouble(priceString.split(" ")[1]) : 0;
+
+                   Item item = price>0 ? new Item(itemName, price,itemUrl, category):null;
                    return item;
                }).collect(Collectors.toList());
 
        saveParsedData(category,itemList);
-       //   .forEach(e-> System.out.println(e.getElementsByClass("image-thumb").attr("title") +" cena = " + e.getElementsByClass("priceCurrent").text()));
+
 
 
    }
@@ -92,7 +95,10 @@ public  class Parser {
     }
 
     void saveParsedData(Category category , List<Item> itemList){
-        itemList.stream().forEach(item -> repository.save(item));
+        itemList.stream().forEach(item -> {
+            if(item!=null)
+            repository.save(item);
+        });
     }
 
 
