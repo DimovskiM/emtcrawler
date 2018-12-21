@@ -99,6 +99,8 @@ public class MockParser {
 
     }
 
+
+    @Scheduled(cron ="5 0 1 * *")
     public void buildDatabase() {
         foodList.stream().forEach(website -> {
             File file = new File(website);
