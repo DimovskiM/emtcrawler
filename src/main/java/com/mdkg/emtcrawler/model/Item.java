@@ -14,7 +14,7 @@ public class Item {
     public Double price;
     @ManyToOne(fetch = FetchType.EAGER)
     public Category category;
-
+    public LocalDate date;
     public String photoLink;
 
 
@@ -26,6 +26,7 @@ public class Item {
     this.price = price;
     this.category = category;
     this.photoLink=photoLink;
+    this.date=LocalDate.now();
   }
   @Override
   public String toString(){

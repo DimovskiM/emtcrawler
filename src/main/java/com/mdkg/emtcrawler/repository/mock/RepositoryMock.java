@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class RepositoryMock {
     List<Item> itemList;
-    List<Category> categoryList;
+    private List<Category> categoryList;
 
     public RepositoryMock() {
         this.itemList = new ArrayList<>();

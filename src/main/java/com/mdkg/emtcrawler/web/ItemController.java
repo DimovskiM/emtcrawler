@@ -22,10 +22,12 @@ import java.util.List;
 public class ItemController {
     @Autowired
     ItemService itemService;
-
+    @Autowired
+    MockParser parser;
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getAllItems(){
         ModelAndView modelAndView= new ModelAndView("index.html");
+
 
          modelAndView.addObject("items",itemService.findAll()) ;
          return modelAndView;

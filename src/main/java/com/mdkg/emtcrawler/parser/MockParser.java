@@ -7,13 +7,18 @@ import com.mdkg.emtcrawler.repository.jpa.ItemRepository;
 import com.mdkg.emtcrawler.repository.mock.RepositoryMock;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +32,7 @@ public class MockParser {
     CategoryRepository categoryRepository;
 
     Document document;
-    static String WEBSITE_TO_BE_CRAWLED = "http//marketonline.mk";
+    static String MARKET_WEBSITE = "http//marketonline.mk";
     static String GRICKI_SOLENKI_SMOKI = "page0.html";
     static String MLECHNI_PROIZVODI = "page1.html";
     static String SIRENJE = "page2.html";
@@ -36,25 +41,37 @@ public class MockParser {
     static String PIVO = "page5.html";
     static String JAJCA = "page6.html";
     static String SVEZH_ZELENCHUK = "page7.html";
-    static String SETEC_LINK = "http://setec.mk/index.php?route=product/category&path=10003&limit=100&";
-    List<String> stringList;
+
+
+    static String LAPTOP_STORE_WEBSITE = "http://setec.mk";
+    static String SETEC_PAGE_ONE = "http://setec.mk/index.php?route=product/category&path=10003&limit=100&";
+    static String SETECT_PAGE_TWO = "http://setec.mk/index.php?route=product/category&path=10003&limit=100&&page=2";
+
+
+
+    List<String> foodList;
+    List<String> laptopList;
+
 
     public MockParser() {
 
-        stringList = new ArrayList<>();
-        stringList.add(GRICKI_SOLENKI_SMOKI);
-        stringList.add(MLECHNI_PROIZVODI);
-        stringList.add(SIRENJE);
-        stringList.add(MLEKO_JOGURT_KISELO_MLEKO);
-        stringList.add(LEB);
-        stringList.add(PIVO);
-        stringList.add(JAJCA);
-        stringList.add(SVEZH_ZELENCHUK);
+       foodList = new ArrayList<>();
+       foodList.add(GRICKI_SOLENKI_SMOKI);
+       foodList.add(MLECHNI_PROIZVODI);
+       foodList.add(SIRENJE);
+       foodList.add(MLEKO_JOGURT_KISELO_MLEKO);
+       foodList.add(LEB);
+       foodList.add(PIVO);
+       foodList.add(JAJCA);
+       foodList.add(SVEZH_ZELENCHUK);
+       laptopList.add(SETEC_PAGE_ONE);
+       laptopList.add(SETECT_PAGE_TWO);
 
 
     }
 
-    public void getAllElements(Document document) {
+    public void getFoodItems(Document document) {
+
         StringBuilder sb = new StringBuilder();
         Category cat = document.getAllElements()
                 .stream()
@@ -82,24 +99,49 @@ public class MockParser {
     }
 
     public void buildDatabase() {
-        stringList.stream().forEach(website -> {
+        foodList.stream().forEach(website -> {
             File file = new File(website);
             Document doc;
             try {
-                doc = Jsoup.parse(file, "UTF-8", WEBSITE_TO_BE_CRAWLED);
-                getAllElements(doc);
+                doc = Jsoup.parse(file, "UTF-8", MARKET_WEBSITE);
+                getFoodItems(doc);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         });
+        laptopList.stream().forEach(website->{
+            File file = new File(website);
+            Document doc;
+            try{
+                Category category=new Category("Лаптопи");
+                categoryRepository.save(category);
+                doc=Jsoup.parse(file,"UTF-8",LAPTOP_STORE_WEBSITE);
+                getLaptopItems(doc,category);
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        });
+
+
     }
 
-    public void saveAllLinks(){
-        //product-item-container;
-        //right-block -> a href -> text
-        //right-block -> price->redovnaCena_Listing;
+    public void getLaptopItems(Document document,Category category){
+
+
+        List<Item> itemList=  document.getAllElements().stream().filter(e-> e.hasClass("product-item-container"))
+                  .map(e-> {
+                      Elements element = e.getElementsByClass("img-responsive");
+                      String name = element.attr("title");
+                      String imgLink = element.attr("src");
+                     String value =  e.getElementById("RedovnaCena_listing").text().split(" ")[2].split(",")[0]
+                             + e.getElementById("RedovnaCena_listing").text().split(" ")[2].split(",")[1];
+                      Double price = Double.parseDouble(value);
+                      Item item = new Item(name,price,imgLink,category);
+
+                      return item;
+                  }).collect(Collectors.toList());
+        saveParsedData(itemList);
+
 
     }
 
@@ -109,4 +151,6 @@ public class MockParser {
             itemRepository.save(item);
         });
     }
+
+
 }
