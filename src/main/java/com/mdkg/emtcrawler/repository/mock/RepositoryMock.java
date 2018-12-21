@@ -2,7 +2,6 @@ package com.mdkg.emtcrawler.repository.mock;
 
 import com.mdkg.emtcrawler.model.Category;
 import com.mdkg.emtcrawler.model.Item;
-import com.sun.tools.javac.jvm.Items;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
