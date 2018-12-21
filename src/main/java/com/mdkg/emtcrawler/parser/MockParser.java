@@ -31,21 +31,21 @@ public class MockParser {
     @Autowired
     CategoryRepository categoryRepository;
 
-    Document document;
-    static String MARKET_WEBSITE = "http//marketonline.mk";
-    static String GRICKI_SOLENKI_SMOKI = "page0.html";
-    static String MLECHNI_PROIZVODI = "page1.html";
-    static String SIRENJE = "page2.html";
-    static String MLEKO_JOGURT_KISELO_MLEKO = "page3.html";
-    static String LEB = "page4.html";
-    static String PIVO = "page5.html";
-    static String JAJCA = "page6.html";
-    static String SVEZH_ZELENCHUK = "page7.html";
+
+    private static String MARKET_WEBSITE = "http//marketonline.mk";
+    private static String GRICKI_SOLENKI_SMOKI = "page0.html";
+    private static String MLECHNI_PROIZVODI = "page1.html";
+    private static String SIRENJE = "page2.html";
+    private static String MLEKO_JOGURT_KISELO_MLEKO = "page3.html";
+    private static String LEB = "page4.html";
+    private static String PIVO = "page5.html";
+    private static String JAJCA = "page6.html";
+    private static String SVEZH_ZELENCHUK = "page7.html";
 
 
-    static String LAPTOP_STORE_WEBSITE = "http://setec.mk";
-    static String SETEC_PAGE_ONE = "http://setec.mk/index.php?route=product/category&path=10003&limit=100&";
-    static String SETECT_PAGE_TWO = "http://setec.mk/index.php?route=product/category&path=10003&limit=100&&page=2";
+    private static String LAPTOP_STORE_WEBSITE = "http://setec.mk";
+    private static String SETEC_PAGE_ONE = "page8.html";
+    private static String SETECT_PAGE_TWO = "page9.html";
 
 
 
@@ -56,6 +56,7 @@ public class MockParser {
     public MockParser() {
 
        foodList = new ArrayList<>();
+       laptopList=new ArrayList<>();
        foodList.add(GRICKI_SOLENKI_SMOKI);
        foodList.add(MLECHNI_PROIZVODI);
        foodList.add(SIRENJE);
@@ -125,7 +126,7 @@ public class MockParser {
 
     }
 
-    public void getLaptopItems(Document document,Category category){
+     void getLaptopItems(Document document,Category category){
 
 
         List<Item> itemList=  document.getAllElements().stream().filter(e-> e.hasClass("product-item-container"))
@@ -145,8 +146,8 @@ public class MockParser {
 
     }
 
-    void saveParsedData(List<Item> itemList) {
-        itemList.stream().forEach(item -> {
+    private void saveParsedData(List<Item> itemList) {
+        itemList.forEach(item -> {
             if(item!=null)
             itemRepository.save(item);
         });
