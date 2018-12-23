@@ -1,5 +1,7 @@
 package com.mdkg.emtcrawler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,6 +17,9 @@ public class Price implements Serializable {
 
   public LocalDate date;
 
+  @ManyToOne
+  @JsonIgnore
+  public Item item;
 
     public Price(){
 

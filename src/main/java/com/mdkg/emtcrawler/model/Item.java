@@ -20,7 +20,7 @@ public class Item {
     public LocalDate date;
     public String photoLink;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "item",fetch = FetchType.EAGER)
     List<Price> priceList;
 
   public Item(){
