@@ -11,7 +11,7 @@ import {parseHttpResponse} from "selenium-webdriver/http";
 })
 export class ItemService{
 
-  private itemsUrl='http://192.168.10.108:8080/item';
+  private itemsUrl='http://localhost:8080/item';
   items : Item[];
 
   constructor(private http:HttpClient){}

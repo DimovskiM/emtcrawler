@@ -17,6 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/item")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ItemController {
     @Autowired
     ItemService itemService;
