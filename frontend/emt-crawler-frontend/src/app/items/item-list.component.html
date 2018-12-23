@@ -6,20 +6,21 @@
     <div class="row">
       <div class="col-md-2">
         Пребарај по име:
-        <div class="col-md-4">
-          <input type="text"
-                 [(ngModel)]="listFilter"/>
-        </div>
 
       </div>
+        <div class="col-md-4">
+          <input type="text"
+                 [(ngModel)]="_listFilter"/>
+        </div>
+
     </div>
     <div class="row">
       <div class="col-md-6">
-        <h4>Филтрирано според : {{listFilter}} </h4>
+        <h4>Филтрирано според : {{_listFilter}} </h4>
       </div>
 
      <div class="table-responsive">
-       <table class="table" >
+       <table class="table" *ngIf="items && items.length" >
         <thead>
           <tr>
             <th>
@@ -35,14 +36,30 @@
               Категорија
             </th>
             <th>
-              Повеќе детали
+
             </th>
           </tr>
         </thead>
          <tbody>
-         <tr>
+         <tr *ngFor='let item of filteredItems'>
            <td>
-             Тест
+              <img [src]="item.photoLink"
+                   [title]="item.name"
+                   [style.width.px]="imageWidth"
+                   [style.margin.px]="imageMargin"/>
+           </td>
+           <td>
+             {{item.name}}
+           </td>
+           <td>
+             {{item.price | currency:'МКД'}}
+           </td>
+           <td>
+             {{item.category.name}}
+           </td>
+
+           <td>
+             <button>Повеќе детали</button>
            </td>
 
          </tr>

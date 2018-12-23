@@ -8,7 +8,6 @@ import java.util.List;
 public interface ItemService {
 
      void save(Item item);
-     Item findById(int id);
      Item findByName(String name);
      List<Item> findByCategory(String category);
      void buildDatabase();

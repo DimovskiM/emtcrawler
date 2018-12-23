@@ -15,10 +15,6 @@ public class CategoryServiceImpl implements CategoryService {
         repository.save(category);
     }
 
-    @Override
-    public Optional<Category> findById(int id) {
-        return repository.findById(id);
-    }
 
     @Override
     public Category findByName(String name) {

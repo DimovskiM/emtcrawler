@@ -7,7 +7,6 @@ import java.util.Optional;
 public interface CategoryService {
 
     void save(Category category);
-    Optional<Category> findById(int id);
     Category findByName(String name);
 
 }

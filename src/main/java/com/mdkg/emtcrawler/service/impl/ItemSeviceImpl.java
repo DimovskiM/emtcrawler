@@ -20,10 +20,7 @@ public class ItemSeviceImpl implements ItemService {
         repository.save(item);
     }
 
-    @Override
-    public Item findById(int id) {
-        return repository.findById(id);
-    }
+
 
     @Override
     public Item findByName(String name) {
