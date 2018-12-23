@@ -6,7 +6,6 @@ export interface Item{
   price:number;
   category:ICategory;
   date:Date;
-
   photoLink:string;
 
 }

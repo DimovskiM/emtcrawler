@@ -51,6 +51,7 @@
            </td>
            <td>
              {{item.name}}
+
            </td>
            <td>
              {{item.price | currency:'МКД'}}
@@ -60,11 +61,12 @@
            </td>
 
            <td>
-             <button>Повеќе детали</button>
+             <button class="btn-primary"   >Повеќе детали</button>
+
            </td>
 
          </tr>
-         <pagination-controls (pageChange)="currentPage = $event" ></pagination-controls>
+         <pagination-controls (pageChange)="currentPage = $event" [nextLabel]="nextLabel" [previousLabel]="previousLabel"></pagination-controls>
          </tbody>
        </table>
      </div>

@@ -11,11 +11,16 @@ import {ItemService} from "./item.service";
 })
 export class ItemListComponent implements OnInit{
   currentPage:number =  1;
+  previousLabel:string = "Назад";
+  nextLabel:string = "Напред";
 
-  pageTitle: string ='EMT Project by Mihajlo Dimovski & Kristijan Gaber';
+
+
+  pageTitle: string ='Проект по Електронска и Мобилна Трговија - Изработен од Михајло Димовски и Кристијан Габер';
 
   imageWidth: number = 50;
   imageMargin:number = 2;
+
 
   errorMessage : string;
 
@@ -52,6 +57,8 @@ export class ItemListComponent implements OnInit{
       error => this.errorMessage = <any> error);
     this.filteredItems = this.items;
   }
+
+
 
 
 

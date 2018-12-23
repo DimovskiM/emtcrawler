@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 import {ItemListComponent} from "./items/item-list.component";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import {GraphComponent} from "./items/graph/graph.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ItemListComponent
+    ItemListComponent,
+    GraphComponent
   ],
   imports: [
     BrowserModule,
