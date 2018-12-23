@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {Item} from "./item";
 import {ItemService} from "./item.service";
 
@@ -10,13 +10,20 @@ import {ItemService} from "./item.service";
   styleUrls : ['./item-list.component.css']
 })
 export class ItemListComponent implements OnInit{
-pageTitle: string ='EMT Project by Mihajlo Dimovski & Kristijan Gaber';
-imageWidth: number = 50;
-imageMargin:number = 2;
-errorMessage : string;
+  currentPage:number =  1;
+
+  pageTitle: string ='EMT Project by Mihajlo Dimovski & Kristijan Gaber';
+
+  imageWidth: number = 50;
+  imageMargin:number = 2;
+
+  errorMessage : string;
+
   _listFilter:string;
   items:Item [];
   filteredItems:Item[];
+
+  @Output() pageChange : EventEmitter<number>;
 
   constructor(private itemService : ItemService){
 
@@ -45,6 +52,8 @@ errorMessage : string;
       error => this.errorMessage = <any> error);
     this.filteredItems = this.items;
   }
+
+
 
 
 }

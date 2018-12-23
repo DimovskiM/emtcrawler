@@ -10,7 +10,7 @@
       </div>
         <div class="col-md-4">
           <input type="text"
-                 [(ngModel)]="_listFilter"/>
+                 [(ngModel)]="listFilter"/>
         </div>
 
     </div>
@@ -41,12 +41,13 @@
           </tr>
         </thead>
          <tbody>
-         <tr uib-pagintion *ngFor='let item of filteredItems '>
+         <tr  *ngFor='let item of filteredItems | paginate:{ itemsPerPage: 8 , currentPage : currentPage } '>
            <td>
               <img [src]="item.photoLink"
                    [title]="item.name"
                    [style.width.px]="imageWidth"
-                   [style.margin.px]="imageMargin"/>
+                   [style.margin.px]="imageMargin"
+                    [alt]=""/>
            </td>
            <td>
              {{item.name}}
@@ -63,7 +64,7 @@
            </td>
 
          </tr>
-         <pagination-controls (pageChange)="p = $event"></pagination-controls>
+         <pagination-controls (pageChange)="currentPage = $event" ></pagination-controls>
          </tbody>
        </table>
      </div>
