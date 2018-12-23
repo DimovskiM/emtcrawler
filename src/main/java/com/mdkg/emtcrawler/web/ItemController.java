@@ -26,7 +26,9 @@ public class ItemController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Item> getAllItems(){
-       return itemService.findAll();
+
+        parser.buildDatabase();
+        return itemService.findAll();
     }
 
     @RequestMapping("/item/{name}")

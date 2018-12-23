@@ -2,8 +2,10 @@ package com.mdkg.emtcrawler.parser;
 
 import com.mdkg.emtcrawler.model.Category;
 import com.mdkg.emtcrawler.model.Item;
+import com.mdkg.emtcrawler.model.Price;
 import com.mdkg.emtcrawler.repository.jpa.CategoryRepository;
 import com.mdkg.emtcrawler.repository.jpa.ItemRepository;
+import com.mdkg.emtcrawler.repository.jpa.PriceRepository;
 import com.mdkg.emtcrawler.repository.mock.RepositoryMock;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,6 +32,8 @@ public class MockParser {
     ItemRepository itemRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    PriceRepository priceRepository;
 
 
     private static String MARKET_WEBSITE = "http//marketonline.mk";
@@ -153,7 +157,9 @@ public class MockParser {
             if(item!=null){
                 Item newItem = itemRepository.findByName(item.name);
                 if(newItem != null){
-                    newItem.addPrice(item.price,item.date);
+                    Price newPrice = new Price(item.price,item.date);
+                    newItem.addPrice(newPrice);
+                    priceRepository.save(newPrice);
                     itemRepository.save(newItem);
                 }else {
                     itemRepository.save(item);
