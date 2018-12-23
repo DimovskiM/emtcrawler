@@ -150,8 +150,16 @@ public class MockParser {
 
     private void saveParsedData(List<Item> itemList) {
         itemList.forEach(item -> {
-            if(item!=null)
-            itemRepository.save(item);
+            if(item!=null){
+                Item newItem = itemRepository.findByName(item.name);
+                if(newItem != null){
+                    newItem.addPrice(item.price,item.date);
+                    itemRepository.save(newItem);
+                }else {
+                    itemRepository.save(item);
+                }
+            }
+
         });
     }
 

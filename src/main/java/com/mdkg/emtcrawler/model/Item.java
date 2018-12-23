@@ -32,4 +32,9 @@ public class Item {
   public String toString(){
     return name + " " + price + " MKD " + category.toString();
   }
+
+  public void addPrice(Double price, LocalDate date){
+  }
 }
+
+
