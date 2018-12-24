@@ -27,7 +27,7 @@ public class ItemController {
     @ResponseBody
     public List<Item> getAllItems(){
 
-        parser.buildDatabase();
+      //  parser.buildDatabase();
         return itemService.findAll();
     }
 

@@ -12,14 +12,16 @@ import java.util.Objects;
 public class Price implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="price_id")
     public int Id;
   public Double price;
 
   public LocalDate date;
 
-  @ManyToOne
-  @JsonIgnore
+  @ManyToOne (fetch = FetchType.EAGER)
   public Item item;
+
+
 
     public Price(){
 

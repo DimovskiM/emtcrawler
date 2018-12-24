@@ -20,7 +20,8 @@
       </div>
 
      <div class="table-responsive">
-       <table class="table" *ngIf="items && items.length" >
+
+       <table class="table" *ngIf="items && items.length else dontShow" >
         <thead>
           <tr>
             <th>
@@ -41,7 +42,7 @@
           </tr>
         </thead>
          <tbody>
-         <tr  *ngFor='let item of filteredItems | paginate:{ itemsPerPage: 8 , currentPage : currentPage } '>
+         <tr  *ngFor='let item of filteredItems | paginate:{ itemsPerPage: 9 , currentPage : currentPage } '>
            <td>
               <img [src]="item.photoLink"
                    [title]="item.name"
@@ -55,9 +56,12 @@
            </td>
            <td>
              {{item.price | currency:'МКД'}}
+
            </td>
            <td>
              {{item.category.name}}
+
+            <!--  <pm-graph></pm-graph>  //IMPLEMENT-->
            </td>
 
            <td>
@@ -65,10 +69,24 @@
 
            </td>
 
+
          </tr>
+
+
+
+
          <pagination-controls (pageChange)="currentPage = $event" [nextLabel]="nextLabel" [previousLabel]="previousLabel"></pagination-controls>
          </tbody>
+
        </table>
+
+       <div  class="text-center" *ngIf="!items" >
+
+         <div class="align-middle">
+           <h1 class="text-capitalize" style="font-family: Arial;" size="150">Нема податоци</h1>
+         </div>
+       </div>
+
      </div>
     </div>
   </div>

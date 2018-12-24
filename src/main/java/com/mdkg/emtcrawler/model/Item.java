@@ -20,8 +20,8 @@ public class Item {
     public LocalDate date;
     public String photoLink;
 
-    @OneToMany(mappedBy = "item",fetch = FetchType.EAGER)
-    List<Price> priceList;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "item",fetch = FetchType.EAGER)
+   public  List<Price> priceList = new ArrayList<>();
 
   public Item(){
 
@@ -33,7 +33,6 @@ public class Item {
     this.photoLink=photoLink;
     this.date=LocalDate.now();
 
-    priceList = new ArrayList<>();
 
   }
   @Override

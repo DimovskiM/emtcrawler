@@ -104,7 +104,7 @@ public class MockParser {
     }
 
 
-    @Scheduled(cron ="5 0 1 * * ?")
+    @Scheduled(cron ="5 0 1 * * ?n")
     public void buildDatabase() {
         foodList.stream().forEach(website -> {
             File file = new File(website);

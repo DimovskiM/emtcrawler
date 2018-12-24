@@ -1,5 +1,6 @@
 
 import {ICategory} from "./category";
+import {IPriceData} from "./IPriceData";
 
 export interface Item{
   name: string;
@@ -7,5 +8,6 @@ export interface Item{
   category:ICategory;
   date:Date;
   photoLink:string;
+  priceList:IPriceData[];
 
 }
