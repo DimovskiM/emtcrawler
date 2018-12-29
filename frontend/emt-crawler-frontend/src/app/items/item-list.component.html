@@ -20,8 +20,7 @@
       </div>
 
      <div class="table-responsive">
-
-       <table class="table" *ngIf="items && items.length else dontShow" >
+       <table class="table" *ngIf="items && items.length" >
         <thead>
           <tr>
             <th>
@@ -53,41 +52,33 @@
            <td>
              {{item.name}}
 
+             <pm-graph [graphData]="item.priceList" [item]="item" *ngIf="item.showGraph"></pm-graph>
            </td>
            <td>
              {{item.price | currency:'МКД'}}
-
            </td>
            <td>
              {{item.category.name}}
 
-            <!--  <pm-graph></pm-graph>  //IMPLEMENT-->
+
            </td>
 
            <td>
-             <button class="btn-primary"   >Повеќе детали</button>
+             <button class="btn-primary" (click)="item.showGraph = !item.showGraph" >Повеќе детали</button>
+
+           </td>
+           <td>
 
            </td>
 
-
          </tr>
-
-
-
 
          <pagination-controls (pageChange)="currentPage = $event" [nextLabel]="nextLabel" [previousLabel]="previousLabel"></pagination-controls>
          </tbody>
-
        </table>
-
-       <div  class="text-center" *ngIf="!items" >
-
-         <div class="align-middle">
-           <h1 class="text-capitalize" style="font-family: Arial;" size="150">Нема податоци</h1>
-         </div>
-       </div>
-
      </div>
     </div>
   </div>
 </div>
+
+

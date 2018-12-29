@@ -10,26 +10,26 @@ import java.util.Objects;
 
 @Entity
 public class Price implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="price_id")
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int Id;
-  public Double price;
 
-  public LocalDate date;
+    public Double price;
 
-  @ManyToOne (fetch = FetchType.EAGER)
-  public Item item;
+    public LocalDate date;
+
+
+
 
 
 
     public Price(){
 
-    }
+        }
     public Price(Double price, LocalDate date) {
         this.price = price;
         this.date = date;
-    }
+        }
 
     @Override
     public boolean equals(Object obj) {

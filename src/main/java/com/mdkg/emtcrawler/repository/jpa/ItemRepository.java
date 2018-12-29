@@ -10,7 +10,8 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item,Integer> {
 
-       Item findByName(String name);
+       @Query("select i from Item i where i.name like :name")
+       Item findByName(@Param("name") String name);
        List<Item> findAll();
        @Query("select i from Item i where category_name=:category")
        List<Item> findByCategoryName(@Param("category")String category);

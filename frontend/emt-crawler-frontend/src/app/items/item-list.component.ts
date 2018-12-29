@@ -2,9 +2,6 @@ import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {Item} from "./item";
 import {ItemService} from "./item.service";
 
-
-
-
 @Component({
   selector : 'pm-items',
   templateUrl : './item-list.component.html',
@@ -56,12 +53,10 @@ export class ItemListComponent implements OnInit{
 
       },
       error => this.errorMessage = <any> error);
-    this.filteredItems = this.items;
+
   }
 
-
-
-
-
-
+  buttonClick():void{
+console.log(this.items);
+  }
 }

@@ -23,11 +23,10 @@ public class ItemController {
     ItemService itemService;
     @Autowired
     MockParser parser;
+
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Item> getAllItems(){
-
-      //  parser.buildDatabase();
         return itemService.findAll();
     }
 
@@ -37,6 +36,12 @@ public class ItemController {
         ModelAndView modelAndView= new ModelAndView("index.html");
         modelAndView.addObject("item",item);
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/db" , method = RequestMethod.GET)
+    public ModelAndView buildDatabase(){
+        parser.buildDatabase();
+       return new ModelAndView("index.html");
     }
 
 

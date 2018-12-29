@@ -1,8 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {NgxPaginationModule} from 'ngx-pagination'
-import {GoogleChartsModule} from 'angular-google-charts';
-
+import {ChartsModule} from "ng2-charts";
 
 
 import { AppComponent } from './app.component';
@@ -22,7 +21,7 @@ import {GraphComponent} from "./items/graph/graph.component";
     FormsModule,
     HttpClientModule,
     NgxPaginationModule,
-    GoogleChartsModule.forRoot()
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

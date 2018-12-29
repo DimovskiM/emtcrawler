@@ -1,5 +1,6 @@
 export interface IPriceData {
-  prices: number[];
-  dates : Date[];
+  Id:number;
+  price: number;
+  date : any;
 
 }

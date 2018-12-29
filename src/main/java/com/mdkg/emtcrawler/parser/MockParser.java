@@ -6,23 +6,14 @@ import com.mdkg.emtcrawler.model.Price;
 import com.mdkg.emtcrawler.repository.jpa.CategoryRepository;
 import com.mdkg.emtcrawler.repository.jpa.ItemRepository;
 import com.mdkg.emtcrawler.repository.jpa.PriceRepository;
-import com.mdkg.emtcrawler.repository.mock.RepositoryMock;
+import org.apache.commons.validator.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,138 +27,111 @@ public class MockParser {
     PriceRepository priceRepository;
 
 
-    private static String MARKET_WEBSITE = "http//marketonline.mk";
-    private static String GRICKI_SOLENKI_SMOKI = "page0.html";
-    private static String MLECHNI_PROIZVODI = "page1.html";
-    private static String SIRENJE = "page2.html";
-    private static String MLEKO_JOGURT_KISELO_MLEKO = "page3.html";
-    private static String LEB = "page4.html";
-    private static String PIVO = "page5.html";
-    private static String JAJCA = "page6.html";
-    private static String SVEZH_ZELENCHUK = "page7.html";
-
+    private static String MARKET_WEBSITE = "https://www.e-tinex.mk";
 
     private static String LAPTOP_STORE_WEBSITE = "http://setec.mk";
-    private static String SETEC_PAGE_ONE = "page8.html";
-    private static String SETECT_PAGE_TWO = "page9.html";
 
+    public MockParser() { }
 
+    public void getFoodItems(String document) throws IOException {
 
-    List<String> foodList;
-    List<String> laptopList;
+        Document doc = Jsoup.connect(document).get();
 
+        List<Item> itemList = doc.getElementsByClass("grid_category1")
+                .stream().map(element -> {
+                   // Elements informationElements = element.getElementsByTag("img");
+                    String priceString = element.getElementsByClass("price_cont").text();
+                    String otherString = element.getElementsByClass("nova_cena").text();
 
-    public MockParser() {
+                    priceString = !otherString.equals("") ? otherString : priceString;
 
-       foodList = new ArrayList<>();
-       laptopList=new ArrayList<>();
-       foodList.add(GRICKI_SOLENKI_SMOKI);
-       foodList.add(MLECHNI_PROIZVODI);
-       foodList.add(SIRENJE);
-       foodList.add(MLEKO_JOGURT_KISELO_MLEKO);
-       foodList.add(LEB);
-       foodList.add(PIVO);
-       foodList.add(JAJCA);
-       foodList.add(SVEZH_ZELENCHUK);
-       laptopList.add(SETEC_PAGE_ONE);
-       laptopList.add(SETECT_PAGE_TWO);
+                    String itemName = element.getElementsByTag("img").attr("title");
+                    String itemUrl = element.getElementsByTag("img").attr("src");
+                    Double price = priceString.length() > 0 ? Double.parseDouble(priceString.split(" ")[0]) : 0;
+                    String categoryName = element.getElementsByTag("img").attr("alt");
+                    Category category = new Category(categoryName);
+                    if(!categoryName.equals(""))
+                    categoryRepository.save(category);
 
+                    Item item = new Item(itemName, price, itemUrl, category);
+                    return item.price > 0 ? item : null;
 
-    }
-
-    public void getFoodItems(Document document) {
-
-        StringBuilder sb = new StringBuilder();
-        Category cat = document.getAllElements()
-                .stream()
-                .filter(e -> e.hasClass("active"))
-                .map(element -> {
-                    Category category = new Category(element.getElementsByClass("active").text());
-                    return category;
-                }).findFirst().get();
-        categoryRepository.save(cat);
-
-        List<Item> itemList = document.getAllElements()
-                .stream()
-                .filter(e -> e.hasClass("thumbnail")).map(element -> {
-                    String priceString = element.getElementsByClass("priceCurrent").text();
-                    String itemName = element.getElementsByClass("image-thumb").attr("title");
-                    String itemUrl = element.getElementsByClass("image-thumb").attr("src");
-                    Double price = priceString.length() > 0 ? Double.parseDouble(priceString.split(" ")[1]) : 0;
-
-                        Item item = price>0 ? new Item(itemName, price,itemUrl, cat):null;
-                        return item;
                 }).collect(Collectors.toList());
 
         saveParsedData(itemList);
-
     }
 
 
-    @Scheduled(cron ="5 0 1 * * ?n")
+    @Scheduled(cron = "0 12 1 * * *") //Grabs data on every 1st of the month at 12:00
     public void buildDatabase() {
-        foodList.stream().forEach(website -> {
-            File file = new File(website);
-            Document doc;
-            try {
-                doc = Jsoup.parse(file, "UTF-8", MARKET_WEBSITE);
-                getFoodItems(doc);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        laptopList.stream().forEach(website->{
-            File file = new File(website);
-            Document doc;
-            try{
-                Category category=new Category("Лаптопи");
-                categoryRepository.save(category);
-                doc=Jsoup.parse(file,"UTF-8",LAPTOP_STORE_WEBSITE);
-                getLaptopItems(doc,category);
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        });
-
-
+        Document document;
+        try {
+            document = Jsoup.connect(MARKET_WEBSITE).get();
+            grabLinks(document);
+            document = Jsoup.connect("http://setec.mk/index.php?route=product/category&path=10003").get();
+            grabLinks(document);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-     void getLaptopItems(Document document,Category category){
+    void getLaptopItems(Document document, Category category) {
 
 
-        List<Item> itemList=  document.getAllElements().stream().filter(e-> e.hasClass("product-item-container"))
-                  .map(e-> {
-                      Elements element = e.getElementsByClass("img-responsive");
-                      String name = element.attr("title");
-                      String imgLink = element.attr("src");
-                     String value =  e.getElementById("RedovnaCena_listing").text().split(" ")[2].split(",")[0]
-                             + e.getElementById("RedovnaCena_listing").text().split(" ")[2].split(",")[1];
-                      Double price = Double.parseDouble(value);
-                      Item item = new Item(name,price,imgLink,category);
+        List<Item> itemList = document.getAllElements().stream().filter(e -> e.hasClass("product-thumb"))
+                .map(e -> {
 
-                      return item;
-                  }).collect(Collectors.toList());
+                    Elements element = e.getElementsByClass("img-responsive");
+                    String name = e.getElementsByClass("img-responsive").attr("title");
+                    String imgLink = e.getElementsByClass("img-responsive").attr("src");
+
+                    String value []= e.getElementsByClass("price-new").text().split(" ")[0].split(",");
+
+
+                    Double price = Double.parseDouble(value[0] + value[1]);
+                    Item item = new Item(name, price, imgLink, category);
+
+                    return item.price > 0 ? item : null;
+                }).collect(Collectors.toList());
         saveParsedData(itemList);
-
-
     }
 
     private void saveParsedData(List<Item> itemList) {
-        itemList.forEach(item -> {
-            if(item!=null){
-                Item newItem = itemRepository.findByName(item.name);
-                if(newItem != null){
-                    Price newPrice = new Price(item.price,item.date);
-                    newItem.addPrice(newPrice);
-                    priceRepository.save(newPrice);
-                    itemRepository.save(newItem);
-                }else {
-                    itemRepository.save(item);
-                }
+        itemList.stream().filter(item -> item != null).forEach(item -> {
+            Item newItem = itemRepository.findByName(item.name);
+            if (newItem != null && newItem.price >item.price) {
+                Price oldPrice = new Price(item.price, item.date);
+                Price newPrice = new Price(newItem.price , newItem.date);
+                newItem.addPrice(newPrice, oldPrice);
+                priceRepository.save(oldPrice);
+                itemRepository.save(newItem);
+            } else if (newItem == null){
+                itemRepository.save(item);
             }
-
         });
     }
 
+    void grabLinks(Document document) {
+        Category techCategory = new Category("Технологија");
+        categoryRepository.save(techCategory);
+        document.select("a[href]").forEach(element -> {
+                    try {
+                        String website = element.attr("abs:href");
 
+                        if (new UrlValidator().isValid(website)) {
+                            System.out.println(website + " contains " + MARKET_WEBSITE + " " + website.contains(MARKET_WEBSITE));
+                            if (website.contains(MARKET_WEBSITE)) {
+                                getFoodItems(website);
+                            } else if (website.contains(LAPTOP_STORE_WEBSITE)) {
+                                getLaptopItems(document, techCategory);
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+        );
+    }
 }
