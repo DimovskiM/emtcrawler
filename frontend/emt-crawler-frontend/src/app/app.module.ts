@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import {NgxPaginationModule} from 'ngx-pagination'
 import {ChartsModule} from "ng2-charts";
 
-
 import { AppComponent } from './app.component';
 import {ItemListComponent} from "./items/item-list.component";
 import {FormsModule} from "@angular/forms";

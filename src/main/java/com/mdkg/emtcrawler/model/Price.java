@@ -1,11 +1,7 @@
 package com.mdkg.emtcrawler.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,19 +9,11 @@ public class Price implements Serializable {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int Id;
-
     public Double price;
-
     public LocalDate date;
 
+    public Price(){}
 
-
-
-
-
-    public Price(){
-
-        }
     public Price(Double price, LocalDate date) {
         this.price = price;
         this.date = date;

@@ -17,7 +17,7 @@ export class ItemListComponent implements OnInit{
   pageTitle: string ='Проект по Електронска и Мобилна Трговија - Изработен од Михајло Димовски и Кристијан Габер';
 
   imageWidth: number = 50;
-  imageMargin:number = 2;
+  imageMargin:number = 1;
 
 
   errorMessage : string;

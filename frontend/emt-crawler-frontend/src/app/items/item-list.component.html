@@ -43,19 +43,26 @@
          <tbody>
          <tr  *ngFor='let item of filteredItems | paginate:{ itemsPerPage: 9 , currentPage : currentPage } '>
            <td>
-              <img [src]="item.photoLink"
-                   [title]="item.name"
-                   [style.width.px]="imageWidth"
-                   [style.margin.px]="imageMargin"
-                    [alt]=""/>
-           </td>
-           <td>
-             {{item.name}}
 
-             <pm-graph [graphData]="item.priceList" [item]="item" *ngIf="item.showGraph"></pm-graph>
+              <img
+                class="img-responsive"
+                [src]="item.photoLink"
+                [title]="item.name"
+                [style.width.px]="imageWidth"
+                [style.margin.px]="imageMargin"
+                    />
+
+           </td>
+           <td >
+             {{item.name}}
+              <div>
+
+             <pm-graph id="graph" [graphData]="item.priceList" [item]="item" *ngIf="item.showGraph" class="collapse"></pm-graph>
+              </div>
+
            </td>
            <td>
-             {{item.price | currency:'МКД'}}
+             {{item.price | currency:'МКД '}}
            </td>
            <td>
              {{item.category.name}}
@@ -64,7 +71,7 @@
            </td>
 
            <td>
-             <button class="btn-primary" (click)="item.showGraph = !item.showGraph" >Повеќе детали</button>
+             <button type="button" class="btn-primary" (click)="item.showGraph = !item.showGraph" data-toggle="collapse" data-target="#graph">Повеќе детали</button>
 
            </td>
            <td>
@@ -80,5 +87,9 @@
     </div>
   </div>
 </div>
+<footer class="page-footer font-small blue">
+  <div class="footer-copyright text-center py-3">© 2019 Михајло Димовски и Кристијан Габер
+  </div>
+</footer>
 
 

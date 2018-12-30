@@ -4,7 +4,6 @@ import com.mdkg.emtcrawler.model.Category;
 import com.mdkg.emtcrawler.repository.jpa.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,9 +14,6 @@ import java.util.List;
 public class CategoryController {
     @Autowired
     CategoryRepository repository;
-
-
-
 
     @RequestMapping("/all")
     public ModelAndView getAllCategories(){

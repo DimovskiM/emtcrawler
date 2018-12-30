@@ -1,8 +1,7 @@
 package com.mdkg.emtcrawler.service.impl;
 
-import com.mdkg.emtcrawler.model.Category;
 import com.mdkg.emtcrawler.model.Item;
-import com.mdkg.emtcrawler.parser.MockParser;
+import com.mdkg.emtcrawler.parser.Parser;
 import com.mdkg.emtcrawler.repository.jpa.ItemRepository;
 import com.mdkg.emtcrawler.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,11 @@ public class ItemSeviceImpl implements ItemService {
     @Autowired
     ItemRepository repository;
     @Autowired
-    MockParser parser;
+    Parser parser;
     @Override
     public void save(Item item) {
         repository.save(item);
     }
-
-
 
     @Override
     public Item findByName(String name) {
