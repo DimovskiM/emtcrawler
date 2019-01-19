@@ -55,8 +55,4 @@ export class ItemListComponent implements OnInit{
       error => this.errorMessage = <any> error);
 
   }
-
-  buttonClick():void{
-console.log(this.items);
-  }
 }

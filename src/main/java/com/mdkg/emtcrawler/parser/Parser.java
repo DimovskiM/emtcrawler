@@ -21,6 +21,7 @@ public class Parser {
 
     private static String MARKET_WEBSITE = "https://www.e-tinex.mk";
     private static String LAPTOP_STORE_WEBSITE = "http://setec.mk";
+    private static String REPTIL_WEBSITE = "http://www.marketonline.mk";
 
     @Autowired
     ItemRepository itemRepository;
@@ -38,7 +39,6 @@ public class Parser {
 
         List<Item> itemList = doc.getElementsByClass("grid_category1")
                 .stream().map(element -> {
-                   // Elements informationElements = element.getElementsByTag("img");
                     String priceString = element.getElementsByClass("price_cont").text();
                     String otherString = element.getElementsByClass("nova_cena").text();
 
@@ -69,25 +69,55 @@ public class Parser {
             grabLinks(document);
             document = Jsoup.connect(LAPTOP_STORE_WEBSITE).get();
             grabLinks(document);
+            document = Jsoup.connect(REPTIL_WEBSITE).get();
+            grabLinks(document);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    void getLaptopItems(Document document, Category category) {
+    void getReptilItems(String website) throws IOException {
 
+        Document document = Jsoup.connect(website).get();
+        Category cat =    document.getAllElements()
+                    .stream()
+                    .filter(e-> e.hasClass("active"))
+                    .map(element -> {
+                        Category category  = new Category(element.getElementsByClass("active").text());
+                        return category;
+                    }).findAny().orElse(null);
+
+            List<Item> itemList =  document.getAllElements()
+                    .stream()
+                    .filter(e-> e.hasClass("thumbnail")).map(element -> {
+                        String priceString = element.getElementsByClass("priceCurrent").text();
+                        Double price = priceString.length()>0 ? Double.parseDouble(priceString.split(" ")[1].replace(",","")) : 0;
+                        String name = element.getElementsByClass("image-thumb").attr("title");
+                        String imageUrl = element.getElementsByClass("image-thumb").attr("src");
+                        Item item = new Item(name,price,imageUrl,cat);
+                        return item.price > 0 ? item : item;
+                    }).collect(Collectors.toList());
+
+           if(cat != null && !itemList.isEmpty()) {
+               categoryRepository.save(cat);
+               saveParsedData(itemList);
+           }
+    }
+
+    void getLaptopItems(String website, Category category) throws IOException {
+
+        Document document = Jsoup.connect(website).get();
 
         List<Item> itemList = document.getAllElements().stream().filter(e -> e.hasClass("product-thumb"))
                 .map(e -> {
 
-                    Elements element = e.getElementsByClass("img-responsive");
                     String name = e.getElementsByClass("img-responsive").attr("title");
                     String imgLink = e.getElementsByClass("img-responsive").attr("src");
 
-                    String value []= e.getElementsByClass("price-new").text().split(" ")[0].split(",");
+                    String value = e.getElementsByClass("price-new").text().split(" ")[0].replace(",","");
 
 
-                    Double price = Double.parseDouble(value[0] + value[1]);
+                    Double price = Double.parseDouble(value);
                     Item item = new Item(name, price, imgLink, category);
 
                     return item.price > 0 ? item : null;
@@ -120,10 +150,17 @@ public class Parser {
                     if (website.contains(MARKET_WEBSITE)) {
                         getFoodItems(website);
                     } else if (website.contains(LAPTOP_STORE_WEBSITE)) {
-                        getLaptopItems(document, techCategory);
+                        getLaptopItems(website, techCategory);
+                    }
+                    else if(website.contains(REPTIL_WEBSITE)){
+                        Thread.sleep(60000);
+                       System.out.println(website);
+                        getReptilItems(website);
                     }
                 }
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 

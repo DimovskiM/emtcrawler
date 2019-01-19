@@ -10,6 +10,7 @@ public class Item {
 
     @Id
     public String name;
+
     public Double price;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -60,5 +61,3 @@ public class Item {
         return name + " " + price + " MKD " + category.toString();
     }
 }
-
-

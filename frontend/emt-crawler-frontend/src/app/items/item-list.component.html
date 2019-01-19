@@ -16,7 +16,7 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        <h4>Филтрирано според : {{_listFilter}} </h4>
+        <h4>Пребарување според : {{_listFilter}} </h4>
       </div>
 
      <div class="table-responsive">
@@ -57,7 +57,7 @@
              {{item.name}}
               <div>
 
-             <pm-graph id="graph" [graphData]="item.priceList" [item]="item" *ngIf="item.showGraph" class="collapse"></pm-graph>
+             <pm-graph id="graph" [graphData]="item.priceList" [item]="item" *ngIf="item.showGraph"></pm-graph>
               </div>
 
            </td>
@@ -71,7 +71,7 @@
            </td>
 
            <td>
-             <button type="button" class="btn-primary" (click)="item.showGraph = !item.showGraph" data-toggle="collapse" data-target="#graph">Повеќе детали</button>
+             <button type="button" class="btn-primary" (click)="item.showGraph = !item.showGraph">Повеќе детали</button>
 
            </td>
            <td>
@@ -79,12 +79,15 @@
            </td>
 
          </tr>
-
          <pagination-controls (pageChange)="currentPage = $event" [nextLabel]="nextLabel" [previousLabel]="previousLabel"></pagination-controls>
          </tbody>
        </table>
+
      </div>
     </div>
+    <h1 class="text-center" *ngIf="!items || filteredItems.length === 0">
+      Нема податоци
+    </h1>
   </div>
 </div>
 <footer class="page-footer font-small blue">

@@ -1,12 +1,10 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, OnInit,Input} from "@angular/core";
 import {IPriceData} from "../IPriceData";
 import {Item} from "../item";
-
 
 @Component({
   selector: 'pm-graph',
   templateUrl: './graph.component.html'
-
 })
 export class GraphComponent implements OnInit{
 

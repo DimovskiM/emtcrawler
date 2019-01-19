@@ -9,6 +9,7 @@ public class Price implements Serializable {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int Id;
+
     public Double price;
     public LocalDate date;
 

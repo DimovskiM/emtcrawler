@@ -12,7 +12,6 @@ import {catchError,tap} from "rxjs/operators";
 export class ItemService{
 
   private itemsUrl='http://localhost:8080/item';
-  items : Item[];
 
   constructor(private http:HttpClient){}
 
