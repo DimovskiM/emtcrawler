@@ -47,7 +47,7 @@ public class Parser {
 
                     String itemName = element.getElementsByTag("img").attr("title");
                     String itemUrl = element.getElementsByTag("img").attr("src");
-                    Double price = priceString.length() > 0 ? Double.parseDouble(priceString.split(" ")[0]) : 0;
+                    Double price = Parse(priceString.split(" ")[0]);
                     String categoryName = element.getElementsByTag("img").attr("alt");
                     Category category = new Category(categoryName);
                     if(!categoryName.equals(""))
@@ -93,7 +93,7 @@ public class Parser {
                     .filter(e-> e.hasClass("thumbnail")).map(element -> {
                         String id = element.getElementsByTag("select").attr("id");
                         String priceString = element.getElementsByClass("priceCurrent").text();
-                        Double price = priceString.length()>0 ? Double.parseDouble(priceString.split(" ")[1].replace(",","")) : 0;
+                        Double price = Parse(priceString.split(" ")[1].replace(",",""));
                         String name = element.getElementsByClass("image-thumb").attr("title");
                         String imageUrl = element.getElementsByClass("image-thumb").attr("src");
                         Item item = new Item(id,name,price,imageUrl,cat);
@@ -119,7 +119,7 @@ public class Parser {
                     String value = e.getElementsByClass("price-new").text().split(" ")[0].replace(",","");
 
 
-                    Double price = Double.parseDouble(value);
+                    Double price = Parse(value);
                     Item item = new Item(name,name, price, imgLink, category);
 
                     return item.price > 0 ? item : null;
@@ -166,5 +166,19 @@ public class Parser {
             }
 
         });
+    }
+
+    double Parse(String value){
+        if(value.length()<0){
+            return 0.0;
+        }
+
+        try{
+         double price = Double.parseDouble(value);
+
+         return price;
+        } catch (NumberFormatException e){
+            return 0.0;
+        }
     }
 }

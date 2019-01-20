@@ -9,7 +9,7 @@ import java.util.*;
 public class Item {
 
     @Id
-    String id;
+    public String id;
 
     public String name;
 
