@@ -40,7 +40,6 @@ public class Parser {
         List<Item> itemList = doc.getElementsByClass("grid_category1")
                 .stream().map(element -> {
                     String id = element.getElementsByClass("dodaj_koshn").attr("data-id");
-                    System.out.println(id + " -------- ID ");
                     String priceString = element.getElementsByClass("price_cont").text();
                     String otherString = element.getElementsByClass("nova_cena").text();
 
@@ -93,7 +92,6 @@ public class Parser {
                     .stream()
                     .filter(e-> e.hasClass("thumbnail")).map(element -> {
                         String id = element.getElementsByTag("select").attr("id");
-                        System.out.println(id + " ID -------------");
                         String priceString = element.getElementsByClass("priceCurrent").text();
                         Double price = priceString.length()>0 ? Double.parseDouble(priceString.split(" ")[1].replace(",","")) : 0;
                         String name = element.getElementsByClass("image-thumb").attr("title");
@@ -158,7 +156,6 @@ public class Parser {
                     }
                     else if(website.contains(REPTIL_WEBSITE)){
                         Thread.sleep(10000);
-                       System.out.println(website);
                         getReptilItems(website);
                     }
                 }
