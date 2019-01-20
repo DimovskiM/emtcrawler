@@ -9,6 +9,8 @@ import java.util.*;
 public class Item {
 
     @Id
+    String id;
+
     public String name;
 
     public Double price;
@@ -26,7 +28,8 @@ public class Item {
 
     public Item(){ }
 
-    public Item(String name, Double price, String photoLink,Category category) {
+    public Item(String id,String name, Double price, String photoLink,Category category) {
+        this.id=id;
         this.name = name;
         this.price = price;
         this.category = category;

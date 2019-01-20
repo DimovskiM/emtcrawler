@@ -39,6 +39,8 @@ public class Parser {
 
         List<Item> itemList = doc.getElementsByClass("grid_category1")
                 .stream().map(element -> {
+                    String id = element.getElementsByClass("dodaj_koshn").attr("data-id");
+                    System.out.println(id + " -------- ID ");
                     String priceString = element.getElementsByClass("price_cont").text();
                     String otherString = element.getElementsByClass("nova_cena").text();
 
@@ -52,7 +54,7 @@ public class Parser {
                     if(!categoryName.equals(""))
                     categoryRepository.save(category);
 
-                    Item item = new Item(itemName, price, itemUrl, category);
+                    Item item = new Item(id,itemName, price, itemUrl, category);
                     return item.price > 0 ? item : null;
 
                 }).collect(Collectors.toList());
@@ -90,12 +92,14 @@ public class Parser {
             List<Item> itemList =  document.getAllElements()
                     .stream()
                     .filter(e-> e.hasClass("thumbnail")).map(element -> {
+                        String id = element.getElementsByTag("select").attr("id");
+                        System.out.println(id + " ID -------------");
                         String priceString = element.getElementsByClass("priceCurrent").text();
                         Double price = priceString.length()>0 ? Double.parseDouble(priceString.split(" ")[1].replace(",","")) : 0;
                         String name = element.getElementsByClass("image-thumb").attr("title");
                         String imageUrl = element.getElementsByClass("image-thumb").attr("src");
-                        Item item = new Item(name,price,imageUrl,cat);
-                        return item.price > 0 ? item : item;
+                        Item item = new Item(id,name,price,imageUrl,cat);
+                        return item.price > 0 ? item : null;
                     }).collect(Collectors.toList());
 
            if(cat != null && !itemList.isEmpty()) {
@@ -118,7 +122,7 @@ public class Parser {
 
 
                     Double price = Double.parseDouble(value);
-                    Item item = new Item(name, price, imgLink, category);
+                    Item item = new Item(name,name, price, imgLink, category);
 
                     return item.price > 0 ? item : null;
                 }).collect(Collectors.toList());
@@ -127,7 +131,7 @@ public class Parser {
 
     private void saveParsedData(List<Item> itemList) {
         itemList.stream().filter(item -> item != null).forEach(item -> {
-            Item newItem = itemRepository.findByName(item.name);
+            Item newItem = itemRepository.findById(item.name);
             if (newItem != null && newItem.price >item.price) {
                 Price oldPrice = new Price(item.price, item.date);
                 Price newPrice = new Price(newItem.price , newItem.date);
@@ -153,7 +157,7 @@ public class Parser {
                         getLaptopItems(website, techCategory);
                     }
                     else if(website.contains(REPTIL_WEBSITE)){
-                        Thread.sleep(60000);
+                        Thread.sleep(10000);
                        System.out.println(website);
                         getReptilItems(website);
                     }

@@ -14,4 +14,7 @@ public interface ItemRepository extends JpaRepository<Item,Integer> {
 
        @Query("select i from Item i where category_name=:category")
        List<Item> findByCategoryName(@Param("category")String category);
+
+       @Query("select i from Item i where i.id like :id")
+       Item findById(@Param("id") String id);
 }
